@@ -1,5 +1,6 @@
 package com.example.offers_localshops;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -28,6 +29,9 @@ public class SignuppageActivity extends AppCompatActivity {
     // Firebase
     private FirebaseAuth mAuth;
     private DatabaseReference mRootRef;
+
+    private static final int MAP_REQUEST = 1001;
+    private double selectedLat = 0.0, selectedLng = 0.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +63,14 @@ public class SignuppageActivity extends AppCompatActivity {
         contentFrame.removeAllViews();
         View form = LayoutInflater.from(this).inflate(layoutId, contentFrame, false);
         contentFrame.addView(form);
+
+        if (layoutId == VENDOR_LAYOUT) {
+            Button pickMapBtn = form.findViewById(R.id.pickLocationBtn);
+            pickMapBtn.setOnClickListener(v -> {
+                Intent intent = new Intent(SignuppageActivity.this, MapPickerActivity.class);
+                startActivityForResult(intent, MAP_REQUEST);
+            });
+        }
     }
 
     /* ---------- read form fields & push to Firebase ---------- */
@@ -105,15 +117,34 @@ public class SignuppageActivity extends AppCompatActivity {
 
     private void saveVendor(String uid, String phone) {
         String store   = textOf((EditText) contentFrame.findViewById(R.id.username));
-        String address = textOf((EditText) contentFrame.findViewById(R.id.location)); // field only in vendor
+        String address = textOf((EditText) contentFrame.findViewById(R.id.location));
         DatabaseReference venRef = mRootRef.child("Vendors").child(uid);
+
         venRef.child("storeName").setValue(store);
         venRef.child("phone").setValue(phone);
         venRef.child("address").setValue(address);
         venRef.child("email").setValue(mAuth.getCurrentUser().getEmail());
+        venRef.child("latitude").setValue(selectedLat);
+        venRef.child("longitude").setValue(selectedLng);
+
         Toast.makeText(this, "Vendor account created!", Toast.LENGTH_SHORT).show();
         finish();
     }
 
     private String textOf(EditText et) { return et == null ? "" : et.getText().toString().trim(); }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == MAP_REQUEST && resultCode == RESULT_OK && data != null) {
+            selectedLat = data.getDoubleExtra("latitude", 0.0);
+            selectedLng = data.getDoubleExtra("longitude", 0.0);
+
+            EditText locationField = contentFrame.findViewById(R.id.location);
+            if (locationField != null) {
+                locationField.setText("Lat: " + selectedLat + ", Lng: " + selectedLng);
+            }
+        }
+    }
 }
