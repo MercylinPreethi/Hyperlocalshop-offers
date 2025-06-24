@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "442810642551",
+    "project_id": "offers-localshops",
+    "storage_bucket": "offers-localshops.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:442810642551:android:c6d00f89f64d29c0f01672",
+        "android_client_info": {
+          "package_name": "com.example.offers_localshops"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB94Z_ng0ATvPe2xWdVHHF5MdH9HJWvumg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
