@@ -43,6 +43,7 @@ dependencies {
     implementation(libs.play.services.location)
 
     implementation(platform(libs.firebase.bom))
+    implementation(libs.places)
 
     implementation(libs.appcompat)
     implementation(libs.material)
