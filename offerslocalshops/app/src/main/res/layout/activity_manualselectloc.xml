@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".manualselectloc">
+
+    <!-- Back arrow -->
+    <ImageView
+        android:id="@+id/arrowIcon"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@drawable/down_arrow"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Title -->
+
+    <!-- Autocomplete Fragment container -->
+
+    <TextView
+        android:id="@+id/locationText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/arrowIcon"
+        android:layout_marginStart="14dp"
+        android:layout_marginBottom="5dp"
+        android:layout_toEndOf="@id/arrowIcon"
+        android:text="Select a location.."
+        android:fontFamily="@font/jacobyttbgoblack"
+        android:textColor="@android:color/black"
+        android:textSize="24sp" />
+
+    <fragment
+        android:id="@+id/autocomplete_fragment"
+        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/arrowIcon"
+        android:layout_marginTop="26dp" />
+
+    <LinearLayout
+        android:id="@+id/currentLocationLayout"
+        android:layout_width="287dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/autocomplete_fragment"
+        android:layout_marginLeft="50sp"
+        android:layout_marginTop="18dp"
+        android:background="?attr/selectableItemBackground"
+        android:backgroundTint="@color/quantum_grey"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="12dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="12dp"
+            android:src="@drawable/current_location" />
+
+        <TextView
+            android:id="@+id/currentLocationText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="2"
+            android:text="Use Current Location"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+</RelativeLayout>
