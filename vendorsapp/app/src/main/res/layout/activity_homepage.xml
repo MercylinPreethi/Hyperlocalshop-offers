@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".homepage">
+
+    <!-- Background -->
+
+    <!-- 🏷️ Title: Shop Details -->
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/background_home"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/shopDetailsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Shop Details"
+        android:textStyle="bold"
+        android:textSize="22sp"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <!-- 🛍️ Shop Type Spinner -->
+
+    <!-- ✏️ Custom Shop Type (visible only if "Other" is selected) -->
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="108dp"
+        android:text="Shop Type"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.047"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/shopType"
+        android:layout_width="334dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="108dp"
+        android:background="@drawable/custom_edittext"
+        android:padding="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.311"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/shopDetailsTitle" />
+
+    <EditText
+        android:id="@+id/customShopType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Enter custom shop type"
+        android:visibility="gone"
+        android:padding="12dp"
+        android:background="@drawable/custom_edittext"
+        android:textColor="@color/black"
+        android:textColorHint="#777"
+        app:layout_constraintTop_toBottomOf="@id/shopType"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- 📆 Weekday Timings -->
+
+    <TextView
+        android:id="@+id/weekdayLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="20dp"
+        android:text="Weekday Timings"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/customShopType" />
+
+    <EditText
+        android:id="@+id/weekdayOpening"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/custom_edittext"
+        android:hint="Opening Time"
+        android:inputType="time"
+        android:padding="12dp"
+        app:layout_constraintEnd_toStartOf="@id/weekdayClosing"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/weekdayLabel"
+        app:layout_constraintWidth_percent="0.45" />
+
+    <!-- 📆 Weekend Timings -->
+
+    <EditText
+        android:id="@+id/weekdayClosing"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/custom_edittext"
+        android:hint="Closing Time"
+        android:inputType="time"
+        android:padding="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/weekdayOpening"
+        app:layout_constraintTop_toBottomOf="@id/weekdayLabel"
+        app:layout_constraintWidth_percent="0.45" />
+
+    <TextView
+        android:id="@+id/weekendLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="24dp"
+        android:text="Weekend Timings"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/weekdayOpening" />
+
+    <EditText
+        android:id="@+id/weekendOpening"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/custom_edittext"
+        android:hint="Opening Time"
+        android:inputType="time"
+        android:padding="12dp"
+        app:layout_constraintEnd_toStartOf="@id/weekendClosing"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/weekendLabel"
+        app:layout_constraintWidth_percent="0.45" />
+
+    <EditText
+        android:id="@+id/weekendClosing"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/custom_edittext"
+        android:hint="Closing Time"
+        android:inputType="time"
+        android:padding="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/weekendOpening"
+        app:layout_constraintTop_toBottomOf="@id/weekendLabel"
+        app:layout_constraintWidth_percent="0.45" />
+
+    <Button
+        android:id="@+id/saveTimingBtn"
+        android:layout_width="259dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="52dp"
+        android:backgroundTint="@color/blue"
+        android:text="Next"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/weekendClosing" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

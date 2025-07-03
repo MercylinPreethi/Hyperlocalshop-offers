@@ -21,9 +21,6 @@
             android:name=".manualselectloc"
             android:exported="false" />
         <activity
-            android:name=".vendorhomepage"
-            android:exported="false" />
-        <activity
             android:name=".MapPickerActivity"
             android:exported="false" />
         <activity
@@ -31,9 +28,6 @@
             android:exported="false" />
         <activity
             android:name=".HomepageActivity"
-            android:exported="false" />
-        <activity
-            android:name=".VendorloginpageActivity"
             android:exported="false" />
         <activity
             android:name=".loginpage"

@@ -1,13 +1,9 @@
 package com.example.offers_localshops;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,133 +14,65 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class SignuppageActivity extends AppCompatActivity {
 
-    private static final int USER_LAYOUT   = R.layout.user_signup_layout;
-    private static final int VENDOR_LAYOUT = R.layout.vendor_signup_layout;
-
-    private int currentLayout = USER_LAYOUT;
-
-    private FrameLayout contentFrame;
-    private Button toggleUserBtn, toggleVendorBtn, signupBtn;
+    private EditText usernameField, emailField, phoneField, passwordField;
+    private Button signupBtn;
 
     // Firebase
     private FirebaseAuth mAuth;
     private DatabaseReference mRootRef;
-
-    private static final int MAP_REQUEST = 1001;
-    private double selectedLat = 0.0, selectedLng = 0.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signuppage);
 
-        // Init Firebase
-        mAuth    = FirebaseAuth.getInstance();
+        // Firebase init
+        mAuth = FirebaseAuth.getInstance();
         mRootRef = FirebaseDatabase.getInstance().getReference();
 
-        // Init UI
-        contentFrame    = findViewById(R.id.contentFrame);
-        toggleUserBtn   = findViewById(R.id.button);   // "User SignUp"
-        toggleVendorBtn = findViewById(R.id.button3);  // "Vendor SignUp"
-        signupBtn       = findViewById(R.id.button2);  // bottom Signup
-
-        // Load default
-        loadForm(USER_LAYOUT);
-
-        toggleUserBtn.setOnClickListener(v -> loadForm(USER_LAYOUT));
-        toggleVendorBtn.setOnClickListener(v -> loadForm(VENDOR_LAYOUT));
+        // Bind views
+        usernameField = findViewById(R.id.username);
+        emailField    = findViewById(R.id.mailid);
+        phoneField    = findViewById(R.id.number);
+        passwordField = findViewById(R.id.password);
+        signupBtn     = findViewById(R.id.button2);
 
         signupBtn.setOnClickListener(v -> handleSignup());
     }
 
-    /* ---------- inflate selected form into FrameLayout ---------- */
-    private void loadForm(int layoutId) {
-        currentLayout = layoutId;
-        contentFrame.removeAllViews();
-        View form = LayoutInflater.from(this).inflate(layoutId, contentFrame, false);
-        contentFrame.addView(form);
-
-        if (layoutId == VENDOR_LAYOUT) {
-            Button pickMapBtn = form.findViewById(R.id.pickLocationBtn);
-            pickMapBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(SignuppageActivity.this, MapPickerActivity.class);
-                startActivityForResult(intent, MAP_REQUEST);
-            });
-        }
-    }
-
-    /* ---------- read form fields & push to Firebase ---------- */
     private void handleSignup() {
-        // find fields inside the current form
-        EditText etEmail    = contentFrame.findViewById(R.id.mailid);
-        EditText etPass     = contentFrame.findViewById(R.id.password);
-        EditText etPhone    = contentFrame.findViewById(R.id.number);      // common phone
-        String email  = textOf(etEmail);
-        String pass   = textOf(etPass);
-        String phone  = textOf(etPhone);
+        String username = usernameField.getText().toString().trim();
+        String email    = emailField.getText().toString().trim();
+        String phone    = phoneField.getText().toString().trim();
+        String password = passwordField.getText().toString().trim();
 
-        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(pass)) {
-            Toast.makeText(this, "Email & password required", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+            Toast.makeText(this, "Email and Password are required", Toast.LENGTH_SHORT).show();
             return;
         }
 
         signupBtn.setEnabled(false);
 
-        mAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(task -> {
-            signupBtn.setEnabled(true);
-            if (!task.isSuccessful()) {
-                Toast.makeText(this, "Auth failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                return;
-            }
-            String uid = mAuth.getCurrentUser().getUid();
-            if (currentLayout == USER_LAYOUT) {
-                saveUser(uid, phone);
-            } else {
-                saveVendor(uid, phone);
-            }
-        });
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    signupBtn.setEnabled(true);
+                    if (!task.isSuccessful()) {
+                        Toast.makeText(this, "Signup failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    String uid = mAuth.getCurrentUser().getUid();
+                    saveUserToDatabase(uid, username, email, phone);
+                });
     }
 
-    private void saveUser(String uid, String phone) {
-        String name = textOf((EditText) contentFrame.findViewById(R.id.username));
+    private void saveUserToDatabase(String uid, String username, String email, String phone) {
         DatabaseReference userRef = mRootRef.child("Users").child(uid);
-        userRef.child("username").setValue(name);
+        userRef.child("username").setValue(username);
+        userRef.child("email").setValue(email);
         userRef.child("phone").setValue(phone);
-        userRef.child("email").setValue(mAuth.getCurrentUser().getEmail());
-        Toast.makeText(this, "User account created!", Toast.LENGTH_SHORT).show();
+
+        Toast.makeText(this, "Account created successfully", Toast.LENGTH_SHORT).show();
         finish();
-    }
-
-    private void saveVendor(String uid, String phone) {
-        String store   = textOf((EditText) contentFrame.findViewById(R.id.username));
-        String address = textOf((EditText) contentFrame.findViewById(R.id.location));
-        DatabaseReference venRef = mRootRef.child("Vendors").child(uid);
-
-        venRef.child("storeName").setValue(store);
-        venRef.child("phone").setValue(phone);
-        venRef.child("address").setValue(address);
-        venRef.child("email").setValue(mAuth.getCurrentUser().getEmail());
-        venRef.child("latitude").setValue(selectedLat);
-        venRef.child("longitude").setValue(selectedLng);
-
-        Toast.makeText(this, "Vendor account created!", Toast.LENGTH_SHORT).show();
-        finish();
-    }
-
-    private String textOf(EditText et) { return et == null ? "" : et.getText().toString().trim(); }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == MAP_REQUEST && resultCode == RESULT_OK && data != null) {
-            selectedLat = data.getDoubleExtra("latitude", 0.0);
-            selectedLng = data.getDoubleExtra("longitude", 0.0);
-
-            EditText locationField = contentFrame.findViewById(R.id.location);
-            if (locationField != null) {
-                locationField.setText("Lat: " + selectedLat + ", Lng: " + selectedLng);
-            }
-        }
     }
 }

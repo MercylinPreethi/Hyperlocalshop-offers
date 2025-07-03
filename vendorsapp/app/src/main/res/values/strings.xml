@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">vendorsapp</string>
+    <string-array name="shop_categories">
+        <item>Select the Shop Type</item>
+        <item>Grocery</item>
+        <item>Electronics</item>
+        <item>Clothing</item>
+        <item>Pharmacy</item>
+        <item>Bakery</item>
+        <item>Hardware</item>
+        <item>Stationery</item>
+        <item>Other</item>
+    </string-array>
+    <string-array name="offer_types">
+        <item>Discount</item>
+        <item>Buy 1 Get 1</item>
+        <item>Cashback</item>
+        <item>Other</item>
+    </string-array>
+</resources>

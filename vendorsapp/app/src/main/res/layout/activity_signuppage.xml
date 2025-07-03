@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainFrame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".signuppage">
+
+    <!-- ✅ Background image -->
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_image" />
+
+    <!-- ✅ Foreground content in ScrollView -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:id="@+id/mainLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="32dp"
+                android:fontFamily="@font/chrustyrockd"
+                android:text="SIGN UP"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black" />
+
+            <LinearLayout
+                android:id="@+id/formContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/custom_edittext"
+                android:elevation="8dp"
+                android:orientation="vertical"
+                android:padding="24dp">
+
+                <!-- form fields -->
+                <EditText
+                    android:id="@+id/username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/custom_edittext"
+                    android:drawableLeft="@drawable/profile"
+                    android:drawablePadding="8dp"
+                    android:hint="Shop Name"
+                    android:padding="12dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="#777" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/passwordLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    app:startIconDrawable="@drawable/lock2"
+                    app:endIconMode="password_toggle"
+                    app:endIconTint="@color/black">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/custom_edittext"
+                        android:hint="Password"
+                        android:inputType="textPassword"
+                        android:padding="12dp"
+                        android:textColor="@color/black"
+                        android:textColorHint="#777" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <EditText
+                    android:id="@+id/mailid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/custom_edittext"
+                    android:drawableLeft="@drawable/mail_icon"
+                    android:drawablePadding="8dp"
+                    android:hint="Mail ID"
+                    android:padding="12dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="#777" />
+
+                <EditText
+                    android:id="@+id/number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/custom_edittext"
+                    android:drawableLeft="@drawable/phone1"
+                    android:drawablePadding="8dp"
+                    android:hint="Phone Number"
+                    android:padding="12dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="#777" />
+
+
+                <EditText
+                    android:id="@+id/location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/custom_edittext"
+                    android:drawableLeft="@drawable/address"
+                    android:drawablePadding="8dp"
+                    android:hint="Shop Address"
+                    android:padding="12dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="#777" />
+
+                <Button
+                    android:id="@+id/pickLocationBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:backgroundTint="@color/brown"
+                    android:text="Pick Location from Map"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <!-- Signup Button -->
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:backgroundTint="@color/brown"
+                android:fontFamily="@font/ttchocolatessemibolditalic"
+                android:text="Signup"
+                android:textSize="18sp"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>
