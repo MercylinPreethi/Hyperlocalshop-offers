@@ -11,11 +11,11 @@
     <!-- Back arrow -->
     <ImageView
         android:id="@+id/arrowIcon"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:src="@drawable/down_arrow"
+        android:layout_width="26dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/down_arrow" />
 
     <!-- Title -->
 
@@ -24,13 +24,13 @@
     <TextView
         android:id="@+id/locationText"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="38dp"
         android:layout_alignBottom="@id/arrowIcon"
         android:layout_marginStart="14dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="-5dp"
         android:layout_toEndOf="@id/arrowIcon"
-        android:text="Select a location.."
         android:fontFamily="@font/jacobyttbgoblack"
+        android:text="Select a location.."
         android:textColor="@android:color/black"
         android:textSize="24sp" />
 

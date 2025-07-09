@@ -2,63 +2,78 @@ package com.example.offers_localshops;
 
 public class Product {
     private String productName;
-    private String offerDetail;
     private String offerType;
+    private String offerDetail;
     private String fromDate;
     private String toDate;
     private String fromTime;
     private String toTime;
+    private String shopName;
+
+    private String shopType;
 
     public Product() {
         // Required for Firebase
     }
 
-    public String getProductName() {
-        return productName;
-    }
-    public void setProductName(String productName) {
+    public Product(String productName, String offerType, String shopType, String offerDetail, String fromDate, String toDate, String fromTime, String toTime, String shopName) {
         this.productName = productName;
+        this.offerType = offerType;
+        this.shopType = shopType;
+        this.offerDetail = offerDetail;
+        this.fromDate = fromDate;
+        this.toDate = toDate;
+        this.fromTime = fromTime;
+        this.toTime = toTime;
+        this.shopName = shopName;
     }
 
-    public String getOfferDetail() {
-        return offerDetail;
-    }
-    public void setOfferDetail(String offerDetail) {
-        this.offerDetail = offerDetail;
+    public String getProductName() {
+        return productName;
     }
 
     public String getOfferType() {
         return offerType;
     }
-    public void setOfferType(String offerType) {
-        this.offerType = offerType;
+
+    public String getShopType() {
+        return shopType;
+    }
+
+
+    public String getOfferDetail() {
+        return offerDetail;
     }
 
     public String getFromDate() {
         return fromDate;
     }
-    public void setFromDate(String fromDate) {
-        this.fromDate = fromDate;
-    }
 
     public String getToDate() {
         return toDate;
-    }
-    public void setToDate(String toDate) {
-        this.toDate = toDate;
     }
 
     public String getFromTime() {
         return fromTime;
     }
-    public void setFromTime(String fromTime) {
-        this.fromTime = fromTime;
-    }
 
     public String getToTime() {
         return toTime;
     }
-    public void setToTime(String toTime) {
-        this.toTime = toTime;
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setOfferType(String offerType) {
+        this.offerType = offerType;
+    }
+
+    public void setShopName(String storeName) {
+        this.shopName = storeName;
+    }
+
+    public void setShopType(String shopType) {
+        this.shopType = shopType;
     }
 }

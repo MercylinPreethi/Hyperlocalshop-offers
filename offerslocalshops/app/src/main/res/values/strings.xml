@@ -3,4 +3,21 @@
     <string name="home_image_description">
         Illustration of a woman shopping online with a large phone screen showing discount categories like clothing and accessories
     </string>
+    <string-array name="shop_categories">
+        <item>Grocery</item>
+        <item>Electronics</item>
+        <item>Clothing</item>
+        <item>Pharmacy</item>
+        <item>Bakery</item>
+        <item>Hardware</item>
+        <item>Stationery</item>
+        <item>Shoes</item>
+        <item>Auto and Parts</item>
+        <item>Furniture</item>
+        <item>Beverages</item>
+        <item>Pet Care</item>
+        <item>Hotel</item>
+        <item>Fast Food Snacks</item>
+        <item>Other</item>
+    </string-array>
 </resources>

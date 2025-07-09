@@ -9,6 +9,12 @@
         <item>Bakery</item>
         <item>Hardware</item>
         <item>Stationery</item>
+        <item>Shoes</item>
+        <item>Auto and Parts</item>
+        <item>Furniture</item>
+        <item>Beverages</item>
+        <item>Pet Care</item>
+        <item>Fast Food snacks</item>
         <item>Other</item>
     </string-array>
     <string-array name="offer_types">

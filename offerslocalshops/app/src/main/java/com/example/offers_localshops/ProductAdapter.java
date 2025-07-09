@@ -1,5 +1,6 @@
 package com.example.offers_localshops;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,33 +20,39 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     }
 
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
-        TextView productName, offerDetail, dateRange, timeRange;
+        TextView productName, offerType, offerDetail, dateRange, timeRange;
 
         public ProductViewHolder(View itemView) {
             super(itemView);
-            productName  = itemView.findViewById(R.id.productName);
-            offerDetail  = itemView.findViewById(R.id.offerDetail);
-            dateRange    = itemView.findViewById(R.id.dateRange);
-            timeRange    = itemView.findViewById(R.id.timeRange);
+            productName = itemView.findViewById(R.id.productName);
+            offerType = itemView.findViewById(R.id.offerType);
+            offerDetail = itemView.findViewById(R.id.offerDetail);
+            dateRange = itemView.findViewById(R.id.dateRange);
+            timeRange = itemView.findViewById(R.id.timeRange);
         }
 
         public void bind(Product product) {
             productName.setText(product.getProductName());
-            offerDetail.setText(product.getOfferDetail());
+            offerType.setText(product.getOfferType());
 
-            String dateStr = product.getFromDate() + " - " + product.getToDate();
-            String timeStr = product.getFromTime() + " - " + product.getToTime();
+            if (product.getOfferDetail() != null && !product.getOfferDetail().isEmpty()) {
+                offerDetail.setVisibility(View.VISIBLE);
+                offerDetail.setText(product.getOfferDetail());
+            } else {
+                offerDetail.setVisibility(View.GONE);
+            }
 
-            dateRange.setText(dateStr);
-            timeRange.setText(timeStr);
+            dateRange.setText(product.getFromDate() + " - " + product.getToDate());
+            timeRange.setText(product.getFromTime() + " - " + product.getToTime());
         }
+
     }
+
 
     @NonNull
     @Override
     public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_product_card, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_product_card, parent, false);
         return new ProductViewHolder(view);
     }
 
