@@ -67,7 +67,6 @@ public class secondpage extends AppCompatActivity {
             }
 
             DatabaseReference productsRef = vendorRef.child(uid).child("products");
-            productsRef.removeValue(); // optional: clears previous offers
 
             for (int i = 0; i < productContainer.getChildCount(); i++) {
                 View row = productContainer.getChildAt(i);
@@ -104,7 +103,8 @@ public class secondpage extends AppCompatActivity {
                 }
 
                 // Push this product into Firebase
-                DatabaseReference rowRef = productsRef.push();
+                String key = name + "_" + fromDateVal + "_" + fromTimeVal;
+                DatabaseReference rowRef = productsRef.child(key);
                 rowRef.child("productName").setValue(name);
                 rowRef.child("offerType").setValue(offerType);
                 rowRef.child("offerDetail").setValue(offerDetailValue);
@@ -162,10 +162,12 @@ public class secondpage extends AppCompatActivity {
             int month = calendar.get(Calendar.MONTH);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-            new DatePickerDialog(secondpage.this, (view, y, m, d) ->
-                    ((EditText) v).setText(d + "/" + (m + 1) + "/" + y),
-                    year, month, day).show();
+            new DatePickerDialog(secondpage.this, (view, y, m, d) -> {
+                String date = String.format(Locale.getDefault(), "%04d-%02d-%02d", y, m + 1, d);
+                ((EditText) v).setText(date);
+            }, year, month, day).show();
         };
+
 
         fromDate.setOnClickListener(v -> showDatePicker(fromDate));
         toDate.setOnClickListener(v -> showDatePicker(toDate));

@@ -18,6 +18,9 @@
         android:theme="@style/Theme.Offerslocalshops"
         tools:targetApi="31">
         <activity
+            android:name=".FavoritesActivity"
+            android:exported="false" />
+        <activity
             android:name=".styles"
             android:exported="false" />
         <activity

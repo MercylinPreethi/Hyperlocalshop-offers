@@ -22,21 +22,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.*;
+import com.google.firebase.database.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class HomepageActivity extends AppCompatActivity {
 
@@ -44,6 +34,8 @@ public class HomepageActivity extends AppCompatActivity {
 
     private TextView locationText;
     private ImageView arrowIcon;
+
+    private ImageView heartIcon;
     private RecyclerView productRecyclerView;
 
     private Location userLocation;
@@ -51,11 +43,10 @@ public class HomepageActivity extends AppCompatActivity {
 
     private ShopAdapter adapter;
     private final List<Product> productList = new ArrayList<>();
+    private final List<Product> fullProductList = new ArrayList<>();
 
     private boolean isManualLocation = false;
     private ActivityResultLauncher<Intent> locationPickerLauncher;
-
-    private final List<Product> fullProductList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,22 +58,33 @@ public class HomepageActivity extends AppCompatActivity {
         productRecyclerView = findViewById(R.id.shopRecyclerView);
 
         productRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        adapter = new ShopAdapter(HomepageActivity.this, productList);
+        adapter = new ShopAdapter(this, productList);
         productRecyclerView.setAdapter(adapter);
 
         fusedClient = LocationServices.getFusedLocationProviderClient(this);
         requestLocation();
 
+        ImageView heartIcon = findViewById(R.id.heartIcon);
+        heartIcon.setOnClickListener(v -> {
+            Intent intent = new Intent(HomepageActivity.this, FavoritesActivity.class);
+            startActivity(intent);
+        });
+
         arrowIcon.setOnClickListener(v -> {
-            Intent intent = new Intent(HomepageActivity.this, manualselectloc.class);
+            Intent intent = new Intent(this, manualselectloc.class);
             locationPickerLauncher.launch(intent);
         });
 
-        EditText searchBar = findViewById(R.id.searchBar);
+        setupSearchBar();
+        setupCategoryChips();
+        initLocationPicker();
+    }
 
+    private void setupSearchBar() {
+        EditText searchBar = findViewById(R.id.searchBar);
         searchBar.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void afterTextChanged(Editable s) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -93,13 +95,10 @@ public class HomepageActivity extends AppCompatActivity {
                     fetchNearbyProducts();
                 }
             }
-            @Override
-            public void afterTextChanged(Editable s) {}
         });
+    }
 
-
-        setupCategoryChips();
-
+    private void initLocationPicker() {
         locationPickerLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -108,124 +107,23 @@ public class HomepageActivity extends AppCompatActivity {
                         if (address != null && !address.isEmpty()) {
                             isManualLocation = true;
                             locationText.setText(address);
-
                             Geocoder geocoder = new Geocoder(this);
                             try {
                                 List<Address> addresses = geocoder.getFromLocationName(address, 1);
-                                if (addresses != null && !addresses.isEmpty()) {
+                                if (!addresses.isEmpty()) {
                                     Address addr = addresses.get(0);
                                     userLocation = new Location("manual");
                                     userLocation.setLatitude(addr.getLatitude());
                                     userLocation.setLongitude(addr.getLongitude());
-
                                     fetchNearbyProducts();
-                                } else {
-                                    locationText.setText("Location not found");
                                 }
                             } catch (IOException e) {
                                 e.printStackTrace();
-                                locationText.setText("Failed to fetch coordinates");
+                                locationText.setText("Geocode failed");
                             }
                         }
-                    }
-                }
-        );
-    }
-
-
-    private void searchShopByName(String query) {
-        FirebaseDatabase.getInstance().getReference("Vendors")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        productList.clear();
-                        fullProductList.clear();
-
-                        String lowerQuery = query.toLowerCase(Locale.getDefault());
-
-                        for (DataSnapshot vendorSnap : snapshot.getChildren()) {
-                            String storeName = vendorSnap.child("storeName").getValue(String.class);
-                            String shopType = vendorSnap.child("shopType").getValue(String.class);
-                            Double lat = vendorSnap.child("latitude").getValue(Double.class);
-                            Double lng = vendorSnap.child("longitude").getValue(Double.class);
-
-                            if (storeName == null || lat == null || lng == null) continue;
-                            if (!storeName.toLowerCase().contains(lowerQuery)) continue;
-
-                            // Distance check
-                            float[] results = new float[1];
-                            if (userLocation != null) {
-                                Location.distanceBetween(
-                                        userLocation.getLatitude(), userLocation.getLongitude(),
-                                        lat, lng, results);
-                                float distanceInKm = results[0] / 1000;
-                                if (distanceInKm > 20) continue;
-                            }
-
-                            DataSnapshot productsSnap = vendorSnap.child("products");
-                            boolean hasOffer = false;
-                            Product productToShow = null;
-
-                            for (DataSnapshot productSnap : productsSnap.getChildren()) {
-                                Product p = productSnap.getValue(Product.class);
-                                if (p != null) {
-                                    p.setShopName(storeName);
-                                    p.setShopType(shopType);
-                                    productToShow = p;
-                                    hasOffer = true;
-                                    break;
-                                }
-                            }
-
-                            if (hasOffer && productToShow != null) {
-                                productList.add(productToShow);
-                            } else {
-                                Product noOffer = new Product();
-                                noOffer.setShopName(storeName);
-                                noOffer.setShopType(shopType);
-                                noOffer.setOfferType("No offers available");
-                                productList.add(noOffer);
-                            }
-                        }
-
-                        adapter.updateList(productList);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        locationText.setText("Search error.");
                     }
                 });
-    }
-
-
-
-    private void requestLocation() {
-        if (isManualLocation) return;
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST);
-            return;
-        }
-
-        LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setInterval(10000);
-        locationRequest.setFastestInterval(5000);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-        fusedClient.requestLocationUpdates(locationRequest, new LocationCallback() {
-            @Override
-            public void onLocationResult(@NonNull LocationResult locationResult) {
-                Location location = locationResult.getLastLocation();
-                if (location != null && !isManualLocation) {
-                    userLocation = location;
-                    updateLocationText(location);
-                    fetchNearbyProducts();
-                }
-            }
-        }, getMainLooper());
     }
 
     private void setupCategoryChips() {
@@ -239,8 +137,6 @@ public class HomepageActivity extends AppCompatActivity {
             chip.setTextColor(getResources().getColor(R.color.black));
             chip.setPadding(32, 16, 32, 16);
             chip.setTextSize(14);
-            chip.setClickable(true);
-            chip.setFocusable(true);
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -249,87 +145,56 @@ public class HomepageActivity extends AppCompatActivity {
             params.setMargins(12, 8, 12, 8);
             chip.setLayoutParams(params);
 
-            chip.setOnClickListener(v -> {
-
-                filterByCategory(category);
-            });
-
+            chip.setOnClickListener(v -> filterByCategory(category));
             categoryContainer.addView(chip);
         }
     }
 
-    private void filterByCategory(String selectedCategory) {
-        if (selectedCategory.equalsIgnoreCase("All") || selectedCategory.equals("Select the Shop Type")) {
+    private void filterByCategory(String category) {
+        if (category.equalsIgnoreCase("All") || category.equals("Select the Shop Type")) {
             adapter.updateList(fullProductList);
             return;
         }
-
         List<Product> filtered = new ArrayList<>();
-        for (Product product : fullProductList) {
-            if (product.getShopType() != null && product.getShopType().equalsIgnoreCase(selectedCategory)) {
-                filtered.add(product);
+        for (Product p : fullProductList) {
+            if (p.getShopType() != null && p.getShopType().equalsIgnoreCase(category)) {
+                filtered.add(p);
             }
         }
-
         adapter.updateList(filtered);
     }
 
+    private void requestLocation() {
+        if (isManualLocation) return;
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST);
+            return;
+        }
 
-    private void fetchNearbyProducts() {
-        FirebaseDatabase.getInstance().getReference("Vendors")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        productList.clear();
-                        fullProductList.clear();
+        LocationRequest request = LocationRequest.create();
+        request.setInterval(10000);
+        request.setFastestInterval(5000);
+        request.setPriority(Priority.PRIORITY_HIGH_ACCURACY);
 
-                        for (DataSnapshot vendorSnap : snapshot.getChildren()) {
-                            Double lat = vendorSnap.child("latitude").getValue(Double.class);
-                            Double lng = vendorSnap.child("longitude").getValue(Double.class);
-                            String storeName = vendorSnap.child("storeName").getValue(String.class);
-                            String shopType = vendorSnap.child("shopType").getValue(String.class);
-
-                            if (lat == null || lng == null || userLocation == null) continue;
-
-                            float[] results = new float[1];
-                            Location.distanceBetween(
-                                    userLocation.getLatitude(), userLocation.getLongitude(),
-                                    lat, lng, results);
-
-                            float distanceInKm = results[0] / 1000;
-                            if (distanceInKm <= 20) {
-                                DataSnapshot productsSnap = vendorSnap.child("products");
-                                for (DataSnapshot productSnap : productsSnap.getChildren()) {
-                                    Product p = productSnap.getValue(Product.class);
-                                    if (p != null) {
-                                        p.setShopName(storeName);
-                                        p.setShopType(shopType);
-                                        productList.add(p);
-                                        fullProductList.add(p);
-                                    }
-                                }
-                            }
-                        }
-
-                        adapter.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        locationText.setText("Error loading products.");
-                    }
-                });
+        fusedClient.requestLocationUpdates(request, new LocationCallback() {
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                userLocation = locationResult.getLastLocation();
+                if (userLocation != null) {
+                    updateLocationText(userLocation);
+                    fetchNearbyProducts();
+                }
+            }
+        }, getMainLooper());
     }
 
     private void updateLocationText(Location location) {
         Geocoder geocoder = new Geocoder(this);
         try {
-            List<Address> addresses = geocoder.getFromLocation(
-                    location.getLatitude(), location.getLongitude(), 1);
-            if (addresses != null && !addresses.isEmpty()) {
+            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            if (!addresses.isEmpty()) {
                 locationText.setText(addresses.get(0).getAddressLine(0));
-            } else {
-                locationText.setText("Unable to get address");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -337,12 +202,87 @@ public class HomepageActivity extends AppCompatActivity {
         }
     }
 
+    private void searchShopByName(String query) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Vendors");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override public void onCancelled(@NonNull DatabaseError error) {}
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                productList.clear();
+                fullProductList.clear();
+                String lowerQuery = query.toLowerCase();
+
+                for (DataSnapshot vendor : snapshot.getChildren()) {
+                    String name = vendor.child("storeName").getValue(String.class);
+                    String type = vendor.child("shopType").getValue(String.class);
+                    Double lat = vendor.child("latitude").getValue(Double.class);
+                    Double lng = vendor.child("longitude").getValue(Double.class);
+
+                    if (name == null || lat == null || lng == null || !name.toLowerCase().contains(lowerQuery)) continue;
+                    if (userLocation != null) {
+                        float[] dist = new float[1];
+                        Location.distanceBetween(userLocation.getLatitude(), userLocation.getLongitude(), lat, lng, dist);
+                        if (dist[0] / 1000 > 20) continue;
+                    }
+
+                    Product product = null;
+                    for (DataSnapshot prod : vendor.child("products").getChildren()) {
+                        product = prod.getValue(Product.class);
+                        if (product != null) {
+                            product.setShopName(name);
+                            product.setShopType(type);
+                            break;
+                        }
+                    }
+                    if (product != null) productList.add(product);
+                }
+                adapter.updateList(productList);
+            }
+        });
+    }
+
+    private void fetchNearbyProducts() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Vendors");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override public void onCancelled(@NonNull DatabaseError error) {}
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                productList.clear();
+                fullProductList.clear();
+
+                for (DataSnapshot vendor : snapshot.getChildren()) {
+                    Double lat = vendor.child("latitude").getValue(Double.class);
+                    Double lng = vendor.child("longitude").getValue(Double.class);
+                    String name = vendor.child("storeName").getValue(String.class);
+                    String type = vendor.child("shopType").getValue(String.class);
+
+                    if (lat == null || lng == null || userLocation == null) continue;
+
+                    float[] dist = new float[1];
+                    Location.distanceBetween(userLocation.getLatitude(), userLocation.getLongitude(), lat, lng, dist);
+                    if (dist[0] / 1000 > 20) continue;
+
+                    for (DataSnapshot prodSnap : vendor.child("products").getChildren()) {
+                        Product p = prodSnap.getValue(Product.class);
+                        if (p != null) {
+                            p.setShopName(name);
+                            p.setShopType(type);
+                            productList.add(p);
+                            fullProductList.add(p);
+                        }
+                    }
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
+    }
+
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == LOCATION_PERMISSION_REQUEST &&
-                grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (requestCode == LOCATION_PERMISSION_REQUEST && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             requestLocation();
         } else {
             locationText.setText("Permission denied");

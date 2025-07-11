@@ -6,59 +6,77 @@
     android:layout_margin="8dp"
     card_view:cardCornerRadius="12dp"
     card_view:cardElevation="6dp"
-    android:foreground="?attr/selectableItemBackground"
-    android:clickable="true">
+    android:clickable="true"
+    android:foreground="?attr/selectableItemBackground">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/productName"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/productContent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Product Name"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:textSize="18sp" />
+            android:orientation="vertical"
+            android:padding="20dp">
 
-        <TextView
-            android:id="@+id/offerDetail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Offer Detail"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            android:layout_marginTop="4dp"/>
+            <TextView
+                android:id="@+id/productName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Product Name"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/offerType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Offer Type"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            android:layout_marginTop="4dp"/>
+            <TextView
+                android:id="@+id/offerDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Offer Detail"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:layout_marginTop="4dp" />
 
-        <TextView
-            android:id="@+id/dateRange"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Date Range"
-            android:textColor="@color/black"
-            android:textSize="13sp"
-            android:layout_marginTop="4dp"/>
+            <TextView
+                android:id="@+id/offerType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Offer Type"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:layout_marginTop="4dp" />
 
-        <TextView
-            android:id="@+id/timeRange"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Time Range"
-            android:textColor="@color/black"
-            android:textSize="13sp" />
+            <TextView
+                android:id="@+id/dateRange"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date Range"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:layout_marginTop="4dp" />
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/timeRange"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Time Range"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:layout_marginTop="4dp" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/heartIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="12dp"
+            android:src="@drawable/heart"
+            android:contentDescription="Favorite icon"
+            android:clickable="true"
+            android:focusable="true" />
+    </RelativeLayout>
 </androidx.cardview.widget.CardView>

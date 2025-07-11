@@ -82,7 +82,7 @@ public class loginpage extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.exists()) {
-                            Toast.makeText(loginpage.this, "Vendor login successful", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(loginpage.this, "User login successful", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(loginpage.this, HomepageActivity.class));
                             finish();
                         } else {
