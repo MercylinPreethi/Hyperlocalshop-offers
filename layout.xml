@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp">
+
+        <!-- Left: Textual Info -->
+        <LinearLayout
+            android:id="@+id/leftContainer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/imageWrapper"
+            android:layout_marginEnd="8dp">
+
+            <TextView
+                android:id="@+id/productName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Choco Almond Cake [500 grams]"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:maxLines="2"
+                android:ellipsize="end" />
+
+            <!-- Price row -->
+            <LinearLayout
+                android:id="@+id/priceRow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="6dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/originalPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="₹535"
+                    android:textSize="14sp"
+                    android:textColor="@color/hint_grey" />
+
+                <TextView
+                    android:id="@+id/discountedPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="₹321"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="6dp"
+                    android:textColor="@color/black" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/offerBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="40% OFF"
+                android:textSize="12sp"
+                android:padding="4dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/offer_badge_background"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/shortDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chocolate cake with almond, layered with chocolate ganache and..."
+                android:textSize="12sp"
+                android:textColor="@color/hint_grey"
+                android:maxLines="3"
+                android:ellipsize="end"
+                android:paddingTop="4dp"
+                android:lineSpacingExtra="2dp" />
+
+        </LinearLayout>
+
+        <!-- Right: Image + overlays -->
+        <FrameLayout
+            android:id="@+id/imageWrapper"
+            android:layout_width="120dp"
+            android:layout_height="140dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <!-- Rounded image using CardView -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_gravity="top"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp">
+
+                <ImageView
+                    android:id="@+id/productImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="Product Image"
+                    android:background="@drawable/placeholder_food" />
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Heart / favorite icon top-right -->
+            <ImageView
+                android:id="@+id/heartIcon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="top|end"
+                android:padding="4dp"
+                android:src="@drawable/heart"
+                android:contentDescription="Favorite"
+                android:background="@drawable/custom_edittext"
+                android:layout_margin="4dp" />
+
+            <!-- ADD button positioned at bottom edge of image (half in/half out) -->
+            <Button
+                android:id="@+id/btnAdd"
+                android:layout_width="80dp"
+                android:layout_height="32dp"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:backgroundTint="@color/red"
+                android:padding="0dp"
+                android:text="ADD +"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                android:elevation="2dp" />
+
+            <!-- Quantity selector positioned at bottom edge of image (half in/half out) -->
+            <LinearLayout
+                android:id="@+id/quantityLayout"
+                android:layout_width="80dp"
+                android:layout_height="32dp"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:visibility="gone"
+                android:background="@drawable/quantity_background"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:elevation="2dp">
+
+                <Button
+                    android:id="@+id/btnDecrease"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="-"
+                    android:textSize="14sp"
+                    android:backgroundTint="@color/light_gray"
+                    android:textColor="@color/black"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:padding="0dp" />
+
+                <TextView
+                    android:id="@+id/txtQuantity"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="1"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btnIncrease"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="+"
+                    android:textSize="14sp"
+                    android:backgroundTint="@color/light_gray"
+                    android:textColor="@color/black"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:padding="0dp" />
+            </LinearLayout>
+
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
